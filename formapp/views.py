@@ -53,11 +53,11 @@ def add_person(request):
     ip = get_client_ip(request)
     data = get_data_by_ip(ip)
     cdata = None
-    if 'country_code' in data.keys():
+    try:
         code = str(data['country_code']).lower()
         cdata = COUNTRIES_DATA['code']
         cdata.update(data)
-    else:
+    except:
        cdata =  {
             'thanks_text' : 'Felicidades, gracias por registrate desde Nicaragua !!!',
             'country_name': 'Nicaragua',
