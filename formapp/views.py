@@ -11,28 +11,21 @@ from formadmin import settings
 COUNTRIES_DATA = {
     'es': {
         'thanks_text' : 'Enhorabuena, gracias por registrate desde España!!!',
-        'country_name': 'España',
-        'flag' : 'https://ipdata.co/flags/es.png'
     },
     'pe': {
         'thanks_text' : 'Felicidades, gracias por registrate desde Perú !!!',
-        'country_name': 'Perú',
-        'flag' : 'https://ipdata.co/flags/pe.png'
     },
     'us' : {
         'thanks_text' : 'Congrats, thanks for register from United States !!!',
-        'country_name': 'United States',
-        'flag' : 'https://ipdata.co/flags/us.png'
     },
     'mx': {
         'thanks_text' : 'Felicidades, gracias por registrate desde México !!!',
-        'country_name': 'México',
-        'flag' : 'https://ipdata.co/flags/mx.png'
     },
     'ni': {
         'thanks_text' : 'Felicidades, gracias por registrate desde Nicaragua !!!',
-        'country_name': 'Nicaragua',
-        'flag' : 'https://ipdata.co/flags/ni.png'
+    },
+    'ger': {
+        'thanks_text' : 'Felicidades, gracias por registrate desde Alemania !!!',
     },
 }
 
@@ -52,17 +45,21 @@ def add_person(request):
     Persona.objects.create(nombre=nombre, apellido=apellido, email=email)
     ip = get_client_ip(request)
     data = get_data_by_ip(ip)
-    cdata = None
+    cdata = {}
+    cdata.update(data)
     try:
         code = str(data['country_code']).lower()
-        cdata = COUNTRIES_DATA['code']
-        cdata.update(data)
+        thanks_text = COUNTRIES_DATA[code]['thanks_text']
+        cdata.update({'thanks_text': thanks_text})
     except:
        cdata =  {
-            'thanks_text' : 'Felicidades, gracias por registrate desde Nicaragua !!!',
-            'country_name': 'Nicaragua',
+            'thanks_text' : 'Felicidades, gracias por registrate desde Nicaragua-DefaultMessagge',
+            'country_name': 'Nicaragua-DefaultCountry',
             'flag_image' : 'https://ipdata.co/flags/ni.png'
         }
+    cdata.update({
+        'cdata': cdata
+    })
     return render(request, 'index/skull.html', context=cdata)
 
 
